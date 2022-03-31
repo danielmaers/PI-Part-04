@@ -1,5 +1,6 @@
 const axios = require("axios")
 const URL="https://rickandmortyapi.com/api/"
+const {Characters, Episodes} = require("../db")
 
 
 
@@ -16,7 +17,10 @@ async function getCharacters (req, res){
                 episode: e.episode
             }
         })
-        res.send(characters)
+
+        let dbCharacters= (await Characters.findAll()).concat(characters)
+        //console.log("dbCharacters",dbCharacters)
+        res.send(dbCharacters)
         
     } catch (error) {
         console.log(error)
@@ -43,12 +47,23 @@ function getCharacterById(req, res){
     .catch(error=> console.log(error))
     
     
-    
-    
-    
 }
+
+function createCharacter(req, res, next){
+    const {name, status, species, img, episode}= req.body
+    let character={name, status, species, img}
+    Characters.create(character)
+    .then(resp=> {
+        resp.addEpisodes(episode)
+        res.send("Personaje creado essitossamente")
+    })    
+    .catch(error=> console.log(error))
+}
+
+
 
 module.exports= {
     getCharacters,
-    getCharacterById
+    getCharacterById,
+    createCharacter
 }
