@@ -1,41 +1,54 @@
-const {Characters, Episodes} = require("../db");
-const axios = require("axios");
+const axios = require("axios")
+const URL="https://rickandmortyapi.com/api/"
 
-async function getAllCharacters(req, res, next){
-try {
-    let character =( await axios.get("https://rickandmortyapi.com/api/character")).data.results.map(char=>{
-        return {
-            id: char.id,
-              name: char.name,
-              status: char.status,
-              species: char.species,
-              img:char.image 
-              }
+
+
+async function getCharacters (req, res){
+    try {
+        let characters= (await axios.get(`${URL}character`)).data.results
+        .map(e=>{
+            return {
+                id: e.id,
+                name: e.name,
+                status: e.status,
+                species: e.species,
+                image: e.image,
+                episode: e.episode
+            }
+        })
+        res.send(characters)
+        
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+function getCharacterById(req, res){
+    
+    const {id} = req.params
+    axios.get(`${URL}character/${id}`)
+    .then(response=>{
+        let character={
+                        id: response.data.id,
+                        name: response.data.name,
+                        status: response.data.status,
+                        species: response.data.species,
+                        image: response.data.image,
+                        episode: response.data.episode
+                    }
+        
+
+        res.send(character)
     })
+    .catch(error=> console.log(error))
     
-    res.send(character)
     
-} catch (error) {
-    next(error)
-}
-}
-
-function getCharacterById(){
-
+    
+    
+    
 }
 
-function getCharByName(){
-
-}
-
-
-function createChar(){
-
-}
-
-module.exports={
-    getAllCharacters,
-    getCharByName,
-    getCharacterById,
-    createChar
+module.exports= {
+    getCharacters,
+    getCharacterById
 }

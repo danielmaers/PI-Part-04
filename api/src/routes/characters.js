@@ -1,12 +1,13 @@
-const {Router} = require ("express");
-const {getAllCharacters, getCharByName, getCharacterById, createChar}= require("../Controllers/characterController")
+const { Router } = require('express');
+const {getCharacters, getCharacterById} = require("../Controllers/characterController")
 
-const router= Router();
+const router = Router();
 
-router.get("/", getAllCharacters);
-router.get("/:charId", getCharacterById);
-router.get("/name", getCharByName);
-router.post("/", createChar)
+router.get("/",getCharacters)
+
+router.get("/:id",getCharacterById)
+
+
 
 
 module.exports= router
