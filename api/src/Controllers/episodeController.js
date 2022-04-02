@@ -18,6 +18,19 @@ async function getEpisodes(req, res, next){
     }
 }
 
+
+async function sendEpisodes(req, res, next){
+
+    try {
+        let episodes= await Episodes.findAll()
+        res.send(episodes)        
+    } catch (error) {
+        next(error)
+    }
+
+}
+
+
 async function chargeEpisodes(){
     let episodes=await getEpisodes()
 return Episodes.bulkCreate(episodes)
@@ -31,5 +44,6 @@ return Episodes.bulkCreate(episodes)
 
 module.exports= {
     getEpisodes,
-    chargeEpisodes
+    chargeEpisodes,
+    sendEpisodes
 }
